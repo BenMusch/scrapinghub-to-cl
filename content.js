@@ -5,7 +5,7 @@ var getCommand = function(data) {
     data = data[0]
     curCommand = "scrapy crawl " + data["spider"]
     for (var arg in data["spider_args"]) {
-      curCommand += " -a " + arg + " " + data["spider_args"][arg]
+      curCommand += " -a " + arg + "=" + data["spider_args"][arg]
     }
   }
 }

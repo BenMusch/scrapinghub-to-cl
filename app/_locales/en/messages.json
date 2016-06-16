@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "ScrapingHub to Command Line",
+    "description": "The name of the application"
+  },
+  "appDescription": {
+    "message": "Generate a scrapy crawl [...] command for the currently open scrapinghub job",
+    "description": "The description of the application"
+  }
+}

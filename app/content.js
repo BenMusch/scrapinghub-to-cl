@@ -1,3 +1,29 @@
+// function showScheduler() {
+//   console.log('From command')
+//   schedule = document.getElementById('from_cl_container');
+//   schedule.style.display = 'block';
+//
+//   get_command = document.getElementById('to_cl_container');
+//   get_command.style.display = 'none';
+// }
+//
+//
+// function showGetCommand() {
+//   console.log('Get command')
+//   schedule = document.getElementById('from_cl_container');
+//   schedule.style.display = 'none';
+//
+//   get_command = document.getElementById('to_cl_container');
+//   get_command.style.display = 'block';
+// }
+//
+// document.addEventListener('DOMContentLoaded', function() {
+//   showGetCommand()
+//
+//   document.getElementById('from_command_toggle').addEventListener('click', showScheduler())
+//   document.getElementById('to_command_toggle').addEventListener('click', showGetCommand())
+// })
+
 var command = "scrapy crawl ";
 
 function getCommand(data, callback) {

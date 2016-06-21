@@ -1,4 +1,5 @@
 <head>
+  <script type="text/javascript" src="shub.js"></script>
   <script type="text/javascript" src="content.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Anonymous+Pro" rel="stylesheet">
   <link rel="stylesheet" media="screen, projection" type="text/css" href="https://d36m24nde77kdn.cloudfront.net/dash/master/9582884/styles/base.css" />
@@ -6,45 +7,73 @@
     .form-control {
       font-family: 'Anonymous Pro', monospace;
       font-size: 10px;
-      height: 100% !important;
+      height: 100px !important;
     }
     .popup-container {
-      padding: 7px;
-      height: 100px;
+      height: 200px;
       width: 300px;
     }
-    .btn {
+    #get_command, #schedule {
       float: right;
-      margin-top: 2px;
     }
     form {
       width: 100%;
-      height: 100%;
+      height: 100px;
     }
     body {
       padding: 0;
+    }
+    .view_toggle {
+      display: block;
+      position: fixed;
+      bottom: 0;
+      height: 50px;
+      border-top: 1px solid #ddd;
+      width: 100%;
+    }
+    .view_toggle a {
+      display: block;
+      float: left;
+      width: 50%;
+      height: 100%;
+      background: #f7f7f7;
+      text-align: center;
+      padding: 15px;
+      border: 1px solid #fff;
+      color: #333;
+    }
+    .view_toggle a:hover {
+      background: #e6e6e6;
+    }
+    .selected {
+      background: #fefefe !important;
+      border: none;
+      border: 1px solid #eee !important;
+    }
+    .content-container {
+      padding: 7px;
     }
   </style>
 </head>
 <body>
   <div class="popup-container">
-    <div id="to_cl_container">
+    <div id="to_cl_container" class="content-container">
       <form action="#">
         <textarea class="form-control" id="to_cl" placeholder="No command found"></textarea>
       </form>
       <button id="get_command" class='btn btn-info'>Get Command</button>
     </div>
 
- <!--   <div class="from_cl_container">
+    <div id="from_cl_container" class="content-container">
       <form action="#">
-        <textarea class="form-control" id="from_cl" placeholder="scrapy crawl . .. "></textarea>
+        <textarea class="form-control" id="from_cl" placeholder="scrapy crawl ... "></textarea>
       </form>
       <button id="schedule" class='btn btn-info'>Schedule</button>
     </div>
 
     <div class="view_toggle">
-      <button id='get_command_toggle'>Get Command</button>
-      <button id='from_command_toggle'>From Command</button>
-    </div> -->
+      <a id='get_command_toggle'>Get Command</a>
+      <a id='from_command_toggle'>From Command</a>
+    </div>
   </div>
 </body>

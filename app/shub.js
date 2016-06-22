@@ -1,5 +1,4 @@
 var command = "scrapy crawl ";
-var formData;
 
 /* parse a scrapinghub command into a FormData object for the schedule API */
 function parseCommand(command, callback) {
@@ -10,12 +9,9 @@ function parseCommand(command, callback) {
 
   args = command.match(/-a\s*[\w\d]+\s*=\S+/g)
 
-  console.log(args)
   for (i = 0; i < args.length; i++) {
     key = /-a\s*([\w\d]+)\s*=\S+/g.exec(args[i])[1]
     val = /-a\s*[\w\d]+\s*=(\S+)/g.exec(args[i])[1]
-    console.log(key)
-    console.log(val)
     data.append(key, val)
   }
 
@@ -27,8 +23,6 @@ function scheduleJob() {
     getProjectId(function(projectId) {
       getApiKey(function(apiKey) {
         data.append('project', projectId)
-        formData = data
-        console.log(data)
         url = 'https://app.scrapinghub.com/api/run.json'
         response = makeRequest(url, "POST", data, apiKey)
       })
@@ -59,7 +53,7 @@ function getJobId(callback) {
   chrome.tabs.query({currentWindow: true, active: true}, function(tabs) {
     url = tabs[0].url
     // matches /{project id}/job/{spider id}/{job id}
-    jobIds = url.match(/\d+\/job\/\d+\/\d+/g)[0].split("/"); 
+    jobIds = url.match(/\d+\/job\/\d+\/\d+/g)[0].split("/");
     jobId = jobIds[0] + '/' + jobIds[2] + '/' + jobIds[3];
     typeof callback === 'function' && callback(jobId);
   })
@@ -110,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
   e = document.getElementById('get_command');
-  e.addEventListener('click', getApiKey({},
+  e.addEventListener('click', getApiKey(
     function(apiKey) {
       getJobData(apiKey, function(data) {
         getCommand(data, function(command) {

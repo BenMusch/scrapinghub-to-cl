@@ -6,6 +6,7 @@ var command = "scrapy crawl ";
  * @param {object} element the element whose value will be changed
  */
 function load(element) {
+  console.log('Loading!')
   if (element.value.indexOf('Loading') == -1) {
     element.value = 'Loading...';
   } else {
@@ -55,15 +56,21 @@ function parseCommand(command, callback) {
  * from_cl textarea field
  */
 function scheduleJob() {
-  parseCommand(document.getElementById('from_cl').value, function(data) {
+  from_cl = document.getElementById('from_cl')
+
+  parseCommand(from_cl.value, function(data) {
     getProjectId(function(projectId) {
       getApiKey(function(apiKey) {
         data.append('project', projectId);
         url = 'https://app.scrapinghub.com/api/run.json';
 
-        errback = function(data) { from_cl.value = 'An error occurred. ' + data['message']; }
-        callback = function(data) { document.getElementById('from_cl').value = 'Scheduled: ' + data['jobid']; }
-        onLoad = function() { load(document.getElementById('from_cl')); }
+        errback = function(data) {
+          from_cl.value = 'An error occurred. ' + data['message'];
+        }
+        callback = function(data) {
+          from_cl.value = 'Scheduled: ' + data['jobid'];
+        }
+        onLoad = function() { load(from_cl); }
 
         response = makeRequest(url, 'POST', data, apiKey, callback, errback, onLoad);
       })
@@ -124,8 +131,11 @@ function getJobData(apiKey, callback) {
   getJobId(function() {
     statsUrl = "https://storage.scrapinghub.com/jobs/" + jobId + "?format=json";
     statsUrl += "&apikey=" + apiKey + "&add_summary=1";
-    errback = function() { document.getElementById('to_cl').value = 'An error occurred'; }
-    onLoad = function() { load(document.getElementById('to_cl')) }
+
+    to_cl = document.getElementById('to_cl')
+
+    errback = function() { to_cl.value = 'An error occurred'; }
+    onLoad = function() { load(to_cl); }
     data = makeRequest(statsUrl, 'GET', null, null, callback, errback, onLoad);
   })
 }
@@ -173,7 +183,8 @@ function makeRequest(url, method, body, auth, callback, errback, onLoad) {
   xmlHttp.onreadystatechange = function() {
     clearInterval(loading);
     responseData = JSON.parse(xmlHttp.responseText);
-    if (xmlHttp.readyState === XMLHttpRequest.DONE && xmlHttp.status.toString()[0] === '2') {
+    if (xmlHttp.readyState === XMLHttpRequest.DONE &&
+        xmlHttp.status.toString()[0] === '2') {
       callback(responseData);
     } else {
       errback(responseData);

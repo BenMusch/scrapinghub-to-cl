@@ -7,8 +7,7 @@ Chrome extension to:
 ![Schedule a job from a command](http://i.imgur.com/MLdXcAF.png)
 
 TODO:
-- General UX improvements (loading, confirmation of scheduled jobs, command
-  syntax validation, error handling)
+- General UX improvements (command syntax validation, improved error handling)
 - Use React
 - Copy to clipboard button
 - Control more variables when scheduling jobs (e.g. project id, priority)

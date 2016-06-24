@@ -6,7 +6,6 @@ var command = "scrapy crawl ";
  * @param {object} element the element whose value will be changed
  */
 function load(element) {
-  console.log('Loading!')
   if (element.value.indexOf('Loading') == -1) {
     element.value = 'Loading...';
   } else {
@@ -56,7 +55,7 @@ function parseCommand(command, callback) {
  * from_cl textarea field
  */
 function scheduleJob() {
-  from_cl = document.getElementById('from_cl')
+  from_cl = document.getElementById('from_cl');
 
   parseCommand(from_cl.value, function(data) {
     getProjectId(function(projectId) {
@@ -132,7 +131,7 @@ function getJobData(apiKey, callback) {
     statsUrl = "https://storage.scrapinghub.com/jobs/" + jobId + "?format=json";
     statsUrl += "&apikey=" + apiKey + "&add_summary=1";
 
-    to_cl = document.getElementById('to_cl')
+    to_cl = document.getElementById('to_cl');
 
     errback = function() { to_cl.value = 'An error occurred'; }
     onLoad = function() { load(to_cl); }

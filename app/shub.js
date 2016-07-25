@@ -1,4 +1,6 @@
 var command = "scrapy crawl ";
+const STATS_URL = "https://storage.scrapinghub.com/jobs/";
+const SCHEDULE_URL = "https://app.scrapinghub.com/api/run.json";
 
 /**
  * Set the value of the element to the next 'Loading...' text
@@ -57,21 +59,16 @@ function parseCommand(command, callback) {
 function scheduleJob() {
   from_cl = document.getElementById('from_cl');
 
-  parseCommand(from_cl.value, function(data) {
-    getProjectId(function(projectId) {
-      getApiKey(function(apiKey) {
+  parseCommand(from_cl.value, data => {
+    getProjectId(projectId => {
+      getApiKey(apiKey => {
         data.append('project', projectId);
-        url = 'https://app.scrapinghub.com/api/run.json';
 
-        errback = function(data) {
-          from_cl.value = 'An error occurred. ' + data['message'];
-        }
-        callback = function(data) {
-          from_cl.value = 'Scheduled: ' + data['jobid'];
-        }
-        onLoad = function() { load(from_cl); }
+        errback = data => from_cl.value = 'An error occurred. ' + data['message']
+        callback = data => from_cl.value = 'Scheduled: ' + data['jobid']
+        onLoad = () => load(from_cl)
 
-        response = makeRequest(url, 'POST', data, apiKey, callback, errback, onLoad);
+        response = makeRequest(SCHEDULE_URL, 'POST', data, apiKey, callback, errback, onLoad);
       })
     })
   })
@@ -98,7 +95,7 @@ function getCommand(data, callback) {
  * @param {function} callback receives the projectId as an argument
  */
 function getProjectId(callback) {
-  chrome.tabs.query({currentWindow: true, active: true}, function(tabs) {
+  chrome.tabs.query({currentWindow: true, active: true}, tabs => {
     url = tabs[0].url;
     // matches /p/{project id}/
     pid = /\/p\/(\d+)\/*/g.exec(url)[1];
@@ -112,11 +109,10 @@ function getProjectId(callback) {
  * @param {function} callback receives the jobId as an argument
  */
 function getJobId(callback) {
-  chrome.tabs.query({currentWindow: true, active: true}, function(tabs) {
+  chrome.tabs.query({currentWindow: true, active: true}, tabs => {
     url = tabs[0].url;
     // matches /{project id}/job/{spider id}/{job id}
-    jobIds = url.match(/\d+\/job\/\d+\/\d+/g)[0].split("/");
-    jobId = jobIds[0] + '/' + jobIds[2] + '/' + jobIds[3];
+    jobId = url.match(/\d+\/\d+\/\d+/g)[0];
     typeof callback === 'function' && callback(jobId);
   })
 }
@@ -127,14 +123,13 @@ function getJobId(callback) {
  * @param {function} callback receives the JSON response as an argument
  */
 function getJobData(apiKey, callback) {
-  getJobId(function() {
-    statsUrl = "https://storage.scrapinghub.com/jobs/" + jobId + "?format=json";
-    statsUrl += "&apikey=" + apiKey + "&add_summary=1";
+  getJobId(() => {
+    statsUrl = STATS_URL + jobId + "?format=json&apikey=" + apiKey + "&add_summary=1";
 
     to_cl = document.getElementById('to_cl');
 
-    errback = function() { to_cl.value = 'An error occurred'; }
-    onLoad = function() { load(to_cl); }
+    errback = () => to_cl.value = 'An error occurred'
+    onLoad = () => load(to_cl)
     data = makeRequest(statsUrl, 'GET', null, null, callback, errback, onLoad);
   })
 }
@@ -146,8 +141,7 @@ function getJobData(apiKey, callback) {
  */
 function getApiKey(callback) {
   chrome.tabs.executeScript(
-    {code: codeForPageVariable('apikey')},
-    function(result) {
+    {code: codeForPageVariable('apikey')}, (result) => {
       if (typeof result != 'undefined') {
         typeof callback === 'function' && callback(result[0]);
       }
@@ -179,7 +173,7 @@ function makeRequest(url, method, body, auth, callback, errback, onLoad) {
   xmlHttp.send(body);
   loading = setInterval(onLoad, 250);
 
-  xmlHttp.onreadystatechange = function() {
+  xmlHttp.onreadystatechange = () => {
     clearInterval(loading);
     responseData = JSON.parse(xmlHttp.responseText);
     if (xmlHttp.readyState === XMLHttpRequest.DONE &&
@@ -202,9 +196,9 @@ function makeRequest(url, method, body, auth, callback, errback, onLoad) {
  * variable
  */
 function codeForPageVariable(varName) {
-  var re = new RegExp(varName + "\\s*:\\s*'.+'", "g");
+  re = new RegExp(varName + "\\s*:\\s*'.+'", "g");
   return "document.getElementsByTagName('head')[0].innerHTML.match(" +
-    re.toString() + ")[0].split(' ')[1].replace(/'/g, '')";
+    re.toString() + ")[0].split(' ')[1].replace(/'/g, '');"
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -214,8 +208,8 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('get_command').addEventListener('click', getApiKey(
     function(apiKey) {
-      getJobData(apiKey, function(data) {
-        getCommand(data[0], function(command) {
+      getJobData(apiKey, (data) => {
+        getCommand(data[0], (command) => {
           document.getElementById('to_cl').value = command;
         })
       })

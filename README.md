@@ -7,6 +7,7 @@ Chrome extension to:
 ![Schedule a job from a command](http://i.imgur.com/MLdXcAF.png)
 
 TODO:
+- Add option to ignore/add quotes around arguments
 - General UX improvements (command syntax validation, improved error handling)
 - Use React
 - Copy to clipboard button
